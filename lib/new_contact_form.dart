@@ -24,35 +24,38 @@ class _NewContactFormState extends State<NewContactForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: TextFormField(
-                  decoration: InputDecoration(labelText: 'Name'),
-                  onSaved: (value) => _name = value,
+      child: Container(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(labelText: 'Name'),
+                    onSaved: (value) => _name = value,
+                  ),
                 ),
-              ),
-              SizedBox(width: 10),
-              Expanded(
-                child: TextFormField(
-                  decoration: InputDecoration(labelText: 'Age'),
-                  keyboardType: TextInputType.number,
-                  onSaved: (value) => _age = value,
+                SizedBox(width: 10),
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(labelText: 'Age'),
+                    keyboardType: TextInputType.number,
+                    onSaved: (value) => _age = value,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          RaisedButton(
-            child: Text('Add New Contact'),
-            onPressed: () {
-              _formKey.currentState.save();
-              final newContact = Contact(_name, int.parse(_age));
-              addContact(newContact);
-            },
-          ),
-        ],
+              ],
+            ),
+            RaisedButton(
+              child: Text('Add New Contact'),
+              onPressed: () {
+                _formKey.currentState.save();
+                final newContact = Contact(_name, int.parse(_age));
+                addContact(newContact);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

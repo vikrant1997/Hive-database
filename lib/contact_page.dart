@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'models/contact.dart';
 import 'new_contact_form.dart';
 
@@ -12,7 +13,6 @@ class ContactPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       maintainBottomViewPadding: true,
-      // bottom: true,
       top: false,
       child: Scaffold(
           appBar: AppBar(
@@ -27,16 +27,52 @@ class ContactPage extends StatelessWidget {
     );
   }
 
-  ListView _buildListView() {
+  Widget _buildListView() {
     final contactsBox = Hive.box('contacts');
-    return ListView.builder(
-        itemCount: contactsBox.length,
-        itemBuilder: (context, index) {
-          final contact = contactsBox.getAt(index) as Contact;
-          return ListTile(
-            title: Text('${contact.name}'),
-            subtitle: Text('${contact.age}'),
-          );
-        });
+    return ValueListenableBuilder(
+      valueListenable: Hive.box('contacts').listenable(),
+      builder: (context, box, widget) {
+        return ListView.builder(
+            itemCount: contactsBox.length,
+            itemBuilder: (context, index) {
+              final contact = contactsBox.getAt(index) as Contact;
+              return ListTile(
+                title: Text('${contact.name}'),
+                subtitle: Text('${contact.age}'),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    // IconButton(
+                    //     icon: Icon(Icons.refresh),
+                    //     onPressed: () {
+                    //       contactsBox.putAt(
+                    //           index, Contact(contact.name, contact.age + 1));
+                    //     }),
+                    IconButton(
+                      icon: Icon(Icons.arrow_upward),
+                      onPressed: () {
+                        contactsBox.putAt(
+                            index, Contact(contact.name, contact.age + 1));
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.keyboard_arrow_down),
+                      onPressed: () {
+                        contactsBox.putAt(
+                            index, Contact(contact.name, contact.age - 1));
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        contactsBox.deleteAt(index);
+                      },
+                    )
+                  ],
+                ),
+              );
+            });
+      },
+    );
   }
 }
